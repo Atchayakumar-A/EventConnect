@@ -1,12 +1,11 @@
-// REPLACE THIS with your actual cloud URL after deploying (e.g., https://eventconnect-api.onrender.com)
-const PRODUCTION_API_URL = 'https://YOUR_CLOUD_BACKEND_URL.com/api';
+// REPLACE THIS with your actual cloud URL after deploying (e.g., https://event-connect-api.onrender.com)
+const PRODUCTION_API_URL = 'https://event-connect-api-89id.onrender.com/api';
 
 const isCapacitor =
   window.location.protocol === 'capacitor:' ||
   (window.location.hostname === 'localhost' && !window.location.port) ||
   window.Capacitor;
 
-// In a real production app, you would use environment variables here.
 const API_BASE = isCapacitor
   ? PRODUCTION_API_URL
   : '/api';
