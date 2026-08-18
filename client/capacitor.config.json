@@ -1,0 +1,9 @@
+{
+  "appId": "com.eventconnect.app",
+  "appName": "EventConnect",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "http",
+    "hostname": "localhost"
+  }
+}
