@@ -2,7 +2,17 @@ const path = require('path');
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 
-const dbPath = path.join(__dirname, '..', 'eventconnect.db');
+// On Render, we use /data/eventconnect.db for persistence.
+// On your computer, it stays in the server folder.
+const isRender = process.env.RENDER === 'true';
+const dbDir = isRender ? '/data' : __dirname;
+const dbPath = isRender ? path.join('/data', 'eventconnect.db') : path.join(__dirname, '..', 'eventconnect.db');
+
+// Ensure directory exists if on Render
+if (isRender && !fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+}
+
 const db = new sqlite3.Database(dbPath);
 
 // Promisified database helpers
