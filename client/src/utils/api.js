@@ -1,5 +1,5 @@
-// REPLACE THIS with your actual cloud URL after deploying (e.g., https://event-connect-api.onrender.com)
-const PRODUCTION_API_URL = 'https://event-connect-api-89id.onrender.com/api';
+// Correct Render URL from your dashboard
+const PRODUCTION_API_URL = 'https://eventconnect-api-oih8.onrender.com/api';
 
 const isCapacitor =
   window.location.protocol === 'capacitor:' ||
@@ -10,7 +10,7 @@ const API_BASE = isCapacitor
   ? PRODUCTION_API_URL
   : '/api';
 
-console.log('API_BASE detected as:', API_BASE);
+console.log('API DEBUG - IsCapacitor:', !!isCapacitor, 'Target:', API_BASE);
 
 const getHeaders = () => {
   const token = localStorage.getItem('eventconnect_token');
@@ -22,34 +22,44 @@ const getHeaders = () => {
 
 export const api = {
   async get(url) {
-    const res = await fetch(`${API_BASE}${url}`, {
-      headers: getHeaders(),
-    });
+    try {
+      const res = await fetch(`${API_BASE}${url}`, {
+        headers: getHeaders(),
+      });
 
-    let data;
-    try { data = await res.json(); } catch (e) { data = {}; }
+      let data;
+      try { data = await res.json(); } catch (e) { data = {}; }
 
-    if (!res.ok) throw new Error(data.error || 'Request failed');
-    return data;
+      if (!res.ok) throw new Error(data.error || 'Request failed');
+      return data;
+    } catch (err) {
+      console.error('Fetch error (GET):', err);
+      throw err;
+    }
   },
 
   async post(url, body) {
-    const res = await fetch(`${API_BASE}${url}`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(body),
-    });
+    try {
+      const res = await fetch(`${API_BASE}${url}`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(body),
+      });
 
-    let data;
-    try { data = await res.json(); } catch (e) { data = {}; }
+      let data;
+      try { data = await res.json(); } catch (e) { data = {}; }
 
-    if (!res.ok) {
-      const err = new Error(data.error || data.message || 'Request failed');
-      err.status = res.status;
-      err.data = data;
+      if (!res.ok) {
+        const err = new Error(data.error || data.message || 'Request failed');
+        err.status = res.status;
+        err.data = data;
+        throw err;
+      }
+      return data;
+    } catch (err) {
+      console.error('Fetch error (POST):', err);
       throw err;
     }
-    return data;
   },
 
   async put(url, body) {
